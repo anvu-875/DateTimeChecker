@@ -4,7 +4,7 @@
  */
 package com.anvu.datetimechecker.exception;
 
-import com.anvu.datetimechecker.dto.ErrDTO;
+import com.anvu.datetimechecker.dto.response.ErrDTO;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 

@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.anvu.datetimechecker.dto;
+package com.anvu.datetimechecker.dto.response;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
@@ -25,15 +25,12 @@ class ErrSerializer<T> extends JsonSerializer<ErrBox<T>> {
 }
 
 @Getter
-public class ErrDTO<T> {
+public class ErrDTO<T> extends ResRequirement {
     @JsonSerialize(using = ErrSerializer.class)
     private ErrBox<T> error;
-    private int status;
-    private String message;
 
     public ErrDTO(T description, ArrayList<ErrorCode> codes, Response.Status status, String message) {
+        super(status, message);
         this.error = new ErrBox(description, codes);
-        this.status = status.getStatusCode();
-        this.message = message;
     }
 }

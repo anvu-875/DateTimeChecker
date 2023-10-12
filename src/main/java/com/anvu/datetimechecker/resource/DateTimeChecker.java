@@ -4,13 +4,14 @@
  */
 package com.anvu.datetimechecker.resource;
 
-import com.anvu.datetimechecker.dto.ErrBox;
-import com.anvu.datetimechecker.dto.ErrDTO;
-import com.anvu.datetimechecker.dto.ErrorCode;
+import com.anvu.datetimechecker.dto.response.ErrBox;
+import com.anvu.datetimechecker.dto.response.ErrDTO;
+import com.anvu.datetimechecker.dto.response.ErrorCode;
 import com.anvu.datetimechecker.dto.MonthYearDTO;
 import com.anvu.datetimechecker.dto.MyDateDTO;
-import com.anvu.datetimechecker.dto.ResDTO;
+import com.anvu.datetimechecker.dto.response.ResDTO;
 import com.anvu.datetimechecker.exception.MyDateTimeException;
+import com.anvu.datetimechecker.utils.Utilities;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.POST;
@@ -36,6 +37,7 @@ public class DateTimeChecker {
     
     private static final String ERROR_MESSAGE = "Request failed";
     private static final String SUCCESS_MESSAGE = "Request successfully";
+    private Utilities utilsInstance = Utilities.getInstance();
 
     @POST
     @Path("get-day")
@@ -50,7 +52,7 @@ public class DateTimeChecker {
         JSONObject json = new JSONObject(req);
         int year = json.getInt("year");
         int month = json.getInt("month");
-        int day = calculateDayInMonth(year, month);
+        int day = utilsInstance.calculateDayInMonth(year, month);
         Map<String, Integer> res = new HashMap();
         res.put("day", day);
         return Response.ok().entity(new ResDTO<>(res, Response.Status.OK, SUCCESS_MESSAGE)).build();
@@ -73,8 +75,8 @@ public class DateTimeChecker {
                 month = json.getInt("month");
                 if (!errBox.getDescription().containsKey("year")) {
                     year = json.getInt("year");
-                    if (!isValidDate(year, month, day)) {
-                        int maxDay = calculateDayInMonth(year, month);
+                    if (!utilsInstance.isValidDate(year, month, day)) {
+                        int maxDay = utilsInstance.calculateDayInMonth(year, month);
                         if (month == 2 && maxDay == 28) {
                             errBox.getDescription().put("day", "day must be from 1 to " + maxDay + " (normal year)");
                         } else if (month == 2 && maxDay == 29) {
@@ -121,36 +123,6 @@ public class DateTimeChecker {
         resList.put("message", "Existence date (" + day + "/" + month + "/" + year + ")");
         ResDTO<Map<String, String>> res = new ResDTO(resList, Response.Status.OK, SUCCESS_MESSAGE);
         return Response.ok().entity(res).build();
-    }
-    
-    private int calculateDayInMonth(int year, int month) {
-        switch (month) {
-            case 1: case 3: case 5: case 7: case 8:case 10: case 12: {
-                return 31;
-            }
-            case 4: case 6: case 9: case 11: {
-                return 30;
-            }
-            case 2: {
-                if (year % 400 == 0 || (year % 4 == 0 && year % 100 != 0)) {
-                    return 29;
-                } else {
-                    return 28;
-                }
-                
-            }
-            default: {
-                return 0;
-            }
-        }
-    }
-    
-    private boolean isValidDate(int year, int month, int day) {
-        boolean isValid = false;
-        if (month <= 12 && month >= 1 && day >= 1 && day <= calculateDayInMonth(year, month)) {
-            isValid = true;
-        }
-        return isValid;
     }
     
     private ErrBox<Map<String, Object>> validateJSON(String jsonString, String schemaJSON) {

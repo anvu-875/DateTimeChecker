@@ -17,8 +17,31 @@ public class MyDateDTO extends MonthYearDTO {
     private int day;
     
     public void setDay(int day) throws Exception {
-        if (day < 1 || day > 31) {
-            throw new Exception("day must be in range from 1 to 31");
+        switch(this.month) {
+            case 1: case 3: case 5: case 7: case 8:case 10: case 12: {
+                if (day < 1 || day > 31) {
+                    throw new Exception("day must be in range from 1 to 31");
+                }
+                break;
+            }
+            case 4: case 6: case 9: case 11: {
+                if (day < 1 || day > 30) {
+                    throw new Exception("day must be in range from 1 to 30");
+                }
+                break;
+            }
+            case 2: {
+                if (this.year % 400 == 0 || (this.year % 4 == 0 && this.year % 100 != 0)) {
+                    if (day < 1 || day > 29) {
+                        throw new Exception("day must be in range from 1 to 29");
+                    }
+                } else {
+                    if (day < 1 || day > 28) {
+                        throw new Exception("day must be in range from 1 to 28");
+                    }
+                }
+                break;
+            }
         }
         this.day = day;
     }
@@ -47,12 +70,5 @@ public class MyDateDTO extends MonthYearDTO {
             "]," +
             "\"additionalProperties\": false" +
         "}";
-    }
-    
-    public static boolean isIntValidDay(int num) {
-        if (num < 1 || num > 31) {
-            return false;
-        }
-        return true;
     }
 }

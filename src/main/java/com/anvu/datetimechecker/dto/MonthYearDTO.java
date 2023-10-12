@@ -17,8 +17,8 @@ import lombok.NoArgsConstructor;
 @Getter
 public class MonthYearDTO {
 
-    private int month;
-    private int year;
+    protected int month;
+    protected int year;
 
     public void setMonth(int month) throws Exception {
         if (month < 1 || month > 12) {
