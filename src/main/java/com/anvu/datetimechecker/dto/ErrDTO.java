@@ -4,30 +4,22 @@
  */
 package com.anvu.datetimechecker.dto;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.ws.rs.core.Response;
 import java.io.IOException;
-import lombok.AllArgsConstructor;
+import java.util.ArrayList;
 import lombok.Getter;
 
 /**
  *
  * @author hoang
  */
-@AllArgsConstructor
-@Getter
-@JsonAutoDetect
-class Err<T> {
-    T error;
-}
-
-class ErrSerializer<T> extends JsonSerializer<Err<T>> {
+class ErrSerializer<T> extends JsonSerializer<ErrBox<T>> {
     @Override
-    public void serialize(Err<T> err, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+    public void serialize(ErrBox<T> err, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
         jsonGenerator.writeObject(err);
     }
 }
@@ -35,11 +27,13 @@ class ErrSerializer<T> extends JsonSerializer<Err<T>> {
 @Getter
 public class ErrDTO<T> {
     @JsonSerialize(using = ErrSerializer.class)
-    private Err<T> body;
+    private ErrBox<T> error;
     private int status;
+    private String message;
 
-    public ErrDTO(T error, Response.Status status) {
-        this.body = new Err(error);
+    public ErrDTO(T description, ArrayList<ErrorCode> codes, Response.Status status, String message) {
+        this.error = new ErrBox(description, codes);
         this.status = status.getStatusCode();
+        this.message = message;
     }
 }
