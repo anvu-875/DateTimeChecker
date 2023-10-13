@@ -11,7 +11,7 @@ package com.anvu.datetimechecker.dto.response;
 public enum ErrorCode {
     INVALID_DATA,
     INVALID_JSON_RULE,
-    REQUiRED,
+    REQUIRED,
     UNPERMITTED,
     UNKNOWN_ERROR
 }

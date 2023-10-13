@@ -114,7 +114,7 @@ public class DateTimeChecker {
             }
         }
         if (!errBox.getDescription().isEmpty()) {
-            if (errBox.getDescription().containsKey("day") && errBox.getCodes().contains(ErrorCode.INVALID_DATA)) {
+            if (errBox.getDescription().containsKey("day") && !errBox.getCodes().contains(ErrorCode.INVALID_DATA)) {
                 errBox.getCodes().add(ErrorCode.INVALID_DATA);
             }
             throw new MyDateTimeException(new ErrDTO(errBox.getDescription(), errBox.getCodes(), Response.Status.BAD_REQUEST, ERROR_MESSAGE), Response.Status.BAD_REQUEST);
@@ -148,8 +148,8 @@ public class DateTimeChecker {
                         }
                     }else if (value.contains("required")) {
                         key = value.substring(value.indexOf("[") + 1, value.indexOf("]"));
-                        if (!codeList.contains(ErrorCode.REQUiRED)) {
-                            codeList.add(ErrorCode.REQUiRED);
+                        if (!codeList.contains(ErrorCode.REQUIRED)) {
+                            codeList.add(ErrorCode.REQUIRED);
                         }
                     } else {
                         key = "unknownErr" + countUnknownErr++;
