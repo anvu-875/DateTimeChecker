@@ -165,7 +165,7 @@ public class DateTimeChecker {
                 errList.put(key, value);
             }
         }catch (JSONException e) {
-            errList.put("JSONFormat", "invalid format JSON object rule");
+            errList.put("JSONFormatRule", "invalid format JSON object rule");
             codeList.add(ErrorCode.INVALID_JSON_RULE);
         } catch (Exception e) {
             errList.put("unIdentifierError", "an unknown error occurs");
