@@ -165,7 +165,7 @@ public class DateTimeChecker {
                         codeList.add(ErrorCode.INVALID_DATA);
                     }
                 }
-                errList.put(key, value);
+//                errList.put(key, value);
             }
         }catch (JSONException e) {
             errList.put("JSONFormatRule", "invalid format JSON object rule");
