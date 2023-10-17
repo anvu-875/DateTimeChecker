@@ -40,7 +40,7 @@ public class DateTimeChecker {
     private Utilities utilsInstance = Utilities.getInstance();
 
     @POST
-    @Path("get-day")
+    @Path("get-max-day")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response checkDayInMonth(String req) throws MyDateTimeException {
@@ -69,6 +69,7 @@ public class DateTimeChecker {
         }
         JSONObject json = new JSONObject(req);
         int day = 0, month = 0, year = 0;
+        boolean checkErrBoxContainKeyDay = false;
         if (!errBox.getDescription().containsKey("day")) {
             day = json.getInt("day");
             if(!errBox.getDescription().containsKey("month")) {
@@ -112,9 +113,11 @@ public class DateTimeChecker {
                     errBox.getDescription().put("day", "day is out of range [1, 31], server is unable to determine month");
                 }
             }
+        } else {
+            checkErrBoxContainKeyDay = true;
         }
         if (!errBox.getDescription().isEmpty()) {
-            if (errBox.getDescription().containsKey("day") && !errBox.getCodes().contains(ErrorCode.INVALID_DATA)) {
+            if (errBox.getDescription().containsKey("day") && !errBox.getCodes().contains(ErrorCode.INVALID_DATA) && !checkErrBoxContainKeyDay) {
                 errBox.getCodes().add(ErrorCode.INVALID_DATA);
             }
             throw new MyDateTimeException(new ErrDTO(errBox.getDescription(), errBox.getCodes(), Response.Status.BAD_REQUEST, ERROR_MESSAGE), Response.Status.BAD_REQUEST);
