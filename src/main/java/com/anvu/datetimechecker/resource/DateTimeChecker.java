@@ -114,7 +114,7 @@ public class DateTimeChecker {
                 }
             }
         } else {
-            checkErrBoxContainKeyDay = false;
+            checkErrBoxContainKeyDay = true;
         }
         if (!errBox.getDescription().isEmpty()) {
             if (errBox.getDescription().containsKey("day") && !errBox.getCodes().contains(ErrorCode.INVALID_DATA) && !checkErrBoxContainKeyDay) {
